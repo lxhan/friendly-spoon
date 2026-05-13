@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  MightyMittsX
+//  friendly-spoon
 //
 //  Created by Alex Han on 2026.04.30.
 //
@@ -13,7 +13,7 @@ struct ContentView: View {
             Image(systemName: "globe")
                 .imageScale(.large)
                 .foregroundStyle(.tint)
-            Text("Hello, world!")
+            Text("friendly-spoon")
         }
         .padding()
     }
