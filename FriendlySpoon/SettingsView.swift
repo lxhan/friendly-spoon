@@ -2,6 +2,9 @@ import SwiftUI
 import Combine
 import ServiceManagement
 
+private let friendlySpoonRepositoryURL = URL(string: "https://github.com/lxhan/friendly-spoon")!
+private let friendlySpoonSettingsTroubleshootingURL = URL(string: "https://github.com/lxhan/friendly-spoon#troubleshooting")!
+
 @MainActor
 final class LaunchAtLogin: ObservableObject {
     @Published var isEnabled: Bool
@@ -94,11 +97,19 @@ struct SettingsView: View {
                 ))
             }
 
+            Section("Help") {
+                Text("friendly-spoon is open source and stores settings locally on this Mac.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Link("Read troubleshooting", destination: friendlySpoonSettingsTroubleshootingURL)
+                Link("View source on GitHub", destination: friendlySpoonRepositoryURL)
+            }
+
             Text("Battery is polled every 60 seconds and on system wake.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
         .formStyle(.grouped)
-        .frame(width: 480, height: 360)
+        .frame(width: 500, height: 430)
     }
 }

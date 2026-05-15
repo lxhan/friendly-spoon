@@ -1,5 +1,8 @@
 import SwiftUI
 import CoreBluetooth
+import AppKit
+
+private let friendlySpoonTroubleshootingURL = URL(string: "https://github.com/lxhan/friendly-spoon#troubleshooting")!
 
 @main
 struct FriendlySpoonApp: App {
@@ -26,6 +29,9 @@ struct FriendlySpoonApp: App {
             if reader.availablePeripherals.isEmpty {
                 Text("No keyboards found")
                     .foregroundStyle(.secondary)
+                Text("Pair the keyboard in macOS Bluetooth first.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             } else {
                 ForEach(reader.availablePeripherals, id: \.identifier) { p in
                     Button {
@@ -44,6 +50,9 @@ struct FriendlySpoonApp: App {
             Button("Refresh devices") { reader.refresh() }
             Divider()
             SettingsLink { Text("Settings…") }
+            Button("Troubleshooting…") {
+                NSWorkspace.shared.open(friendlySpoonTroubleshootingURL)
+            }
             Button("Quit") { NSApplication.shared.terminate(nil) }
         } label: {
             if reader.isConnected && (reader.leftPercent > 0 || reader.rightPercent > 0) {
