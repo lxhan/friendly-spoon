@@ -80,6 +80,8 @@ struct FriendlySpoonApp: App {
 /// rendering otherwise strips/normalizes colors.
 private struct MenuBarBitmapLabel: View {
     let text: Text
+    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.displayScale) private var displayScale
 
     var body: some View {
         if let img = renderImage() {
@@ -91,10 +93,14 @@ private struct MenuBarBitmapLabel: View {
 
     @MainActor
     private func renderImage() -> NSImage? {
-        let renderer = ImageRenderer(content: text.font(.system(size: 14)))
-        renderer.scale = NSScreen.main?.backingScaleFactor ?? 2.0
+        let renderer = ImageRenderer(
+            content: text
+                .font(.system(size: 14))
+                .environment(\.colorScheme, colorScheme)
+        )
+        renderer.scale = displayScale
         guard let image = renderer.nsImage else { return nil }
-        image.isTemplate = false  // keep the colors instead of letting macOS tint as template
+        image.isTemplate = false  // keep warning colors instead of letting macOS tint as template
         return image
     }
 }
