@@ -1,6 +1,5 @@
 import SwiftUI
 import Combine
-import ServiceManagement
 
 private let friendlySpoonRepositoryURL = URL(string: "https://github.com/lxhan/friendly-spoon")!
 private let friendlySpoonSettingsTroubleshootingURL = URL(string: "https://github.com/lxhan/friendly-spoon#troubleshooting")!
@@ -8,24 +7,22 @@ private let friendlySpoonSettingsTroubleshootingURL = URL(string: "https://githu
 @MainActor
 final class LaunchAtLogin: ObservableObject {
     @Published var isEnabled: Bool
+    @Published var errorMessage: String?
 
     init() {
-        self.isEnabled = SMAppService.mainApp.status == .enabled
+        LaunchAtLoginService.repairExistingRegistration()
+        self.isEnabled = LaunchAtLoginService.isEnabled
     }
 
     func apply() {
-        let want = isEnabled
-        let have = SMAppService.mainApp.status == .enabled
-        guard want != have else { return }
         do {
-            if want {
-                try SMAppService.mainApp.register()
-            } else {
-                try SMAppService.mainApp.unregister()
-            }
+            try LaunchAtLoginService.setEnabled(isEnabled)
+            errorMessage = nil
+            isEnabled = LaunchAtLoginService.isEnabled
         } catch {
             NSLog("[LaunchAtLogin] toggle failed: \(error)")
-            isEnabled = SMAppService.mainApp.status == .enabled
+            errorMessage = error.localizedDescription
+            isEnabled = LaunchAtLoginService.isEnabled
         }
     }
 }
@@ -95,6 +92,12 @@ struct SettingsView: View {
                         launch.apply()
                     }
                 ))
+
+                if let errorMessage = launch.errorMessage {
+                    Text(errorMessage)
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                }
             }
 
             Section("Help") {

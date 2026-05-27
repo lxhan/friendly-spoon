@@ -103,9 +103,12 @@ Try:
 
 ### Launch at login does not work
 
+friendly-spoon uses a user LaunchAgent for reliable startup after reboot.
+
 - Toggle **Settings → Launch at login** off and on.
 - Confirm friendly-spoon is in `/Applications`.
-- Reopen the app after moving it.
+- Reopen the app after moving it so it can update the LaunchAgent path.
+- Confirm this file exists: `~/Library/LaunchAgents/dev.lxhan.friendly-spoon.launch-at-login.plist`.
 
 ## Privacy
 
@@ -155,7 +158,13 @@ shasum -a 256 friendly-spoon-macos.zip
 
 1. Quit friendly-spoon from the menu bar.
 2. Delete `/Applications/friendly-spoon.app`.
-3. Optional: remove local settings:
+3. Remove launch-at-login file if it exists:
+
+```bash
+rm -f ~/Library/LaunchAgents/dev.lxhan.friendly-spoon.launch-at-login.plist
+```
+
+4. Optional: remove local settings:
 
 ```bash
 defaults delete dev.lxhan.friendly-spoon 2>/dev/null || true

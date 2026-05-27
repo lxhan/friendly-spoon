@@ -7,6 +7,10 @@ private let friendlySpoonTroubleshootingURL = URL(string: "https://github.com/lx
 @main
 struct FriendlySpoonApp: App {
     @StateObject private var reader = BatteryReader()
+
+    init() {
+        LaunchAtLoginService.repairExistingRegistration()
+    }
     @AppStorage("menuBarStyle") private var styleRaw: String = MenuBarStyle.bars.rawValue
     @AppStorage("halfGlyphs") private var glyphsRaw: String = HalfGlyphs.blocks.rawValue
     @AppStorage("colorize") private var colorize: Bool = true
